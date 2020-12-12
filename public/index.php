@@ -89,7 +89,7 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
 
 $app->get('/pushmessage', function ($req, $response) use ($bot) {
     // send push message to user
-    $userId = 'U102b977f023ad41432ca44954cb76f6c';
+    $userId = 'jiepiranha';
     $textMessageBuilder = new TextMessageBuilder('Halo, ini pesan push');
     $result = $bot->pushMessage($userId, $textMessageBuilder);
  
