@@ -80,11 +80,68 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
                         ->withHeader('Content-Type', 'application/json')
                         ->withStatus($result->getHTTPStatus());
                 }
+
+                //Content api
+                elseif (
+                    $event['message']['type'] == 'image' or
+                    $event['message']['type'] == 'video' or
+                    $event['message']['type'] == 'audio' or
+                    $event['message']['type'] == 'file'
+                ) {
+                    $contentURL = " https://example.herokuapp.com/public/content/" . $event['message']['id'];
+                    $contentType = ucfirst($event['message']['type']);
+                    $result = $bot->replyText($event['replyToken'],
+                        $contentType . " yang Anda kirim bisa diakses dari link:\n " . $contentURL);
+                    $response->getBody()->write(json_encode($result->getJSONDecodedBody()));
+                    return $response
+                        ->withHeader('Content-Type', 'application/json')
+                        ->withStatus($result->getHTTPStatus());
+                } 
+
+                //group room
+                elseif (
+                    $event['source']['type'] == 'group' or
+                    $event['source']['type'] == 'room'
+                ) {
+                    //message from group / room
+                    if ($event['source']['userId']) {
+                
+                        $userId = $event['source']['userId'];
+                        $getprofile = $bot->getProfile($userId);
+                        $profile = $getprofile->getJSONDecodedBody();
+                        $greetings = new TextMessageBuilder("Halo, " . $profile['displayName']);
+                
+                        $result = $bot->replyMessage($event['replyToken'], $greetings);
+                        $response->getBody()->write(json_encode($result->getJSONDecodedBody()));
+                        return $response
+                            ->withHeader('Content-Type', 'application/json')
+                            ->withStatus($result->getHTTPStatus());
+                    }
+                } else {
+                    //message from single user
+                    $result = $bot->replyText($event['replyToken'], $event['message']['text']);
+                    $response->getBody()->write((string)$result->getJSONDecodedBody());
+                    return $response
+                        ->withHeader('Content-Type', 'application/json')
+                        ->withStatus($result->getHTTPStatus());
+                }
+
             }
         }
         return $response->withStatus(200, 'for Webhook!'); //buat ngasih response 200 ke pas verify webhook
     }
     return $response->withStatus(400, 'No event sent!');
+});
+
+$app->get('/content/{messageId}', function ($req, $response, $args) use ($bot) {
+    // get message content
+    $messageId = $args['messageId'];
+    $result = $bot->getMessageContent($messageId);
+    // set response
+    $response->getBody()->write($result->getRawBody());
+    return $response
+        ->withHeader('Content-Type', $result->getHeader('Content-Type'))
+        ->withStatus($result->getHTTPStatus());
 });
 
 $app->get('/pushmessage', function ($req, $response) use ($bot) {
