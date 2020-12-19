@@ -62,12 +62,33 @@ $app->post('/webhook', function (Request $request, Response $response) use ($cha
     if(is_array($data['events'])){
         foreach ($data['events'] as $event)
         {
+            //reply message
             if ($event['type'] == 'message')
             {
                 if($event['message']['type'] == 'text')
                 {
-                    // send same message as reply to user
-                    $result = $bot->replyText($event['replyToken'], $event['message']['text']);
+                    if (strtolower($event['message']['text']) == 'user id') {
+
+                        $result = $bot->replyText($event['replyToken'], $event['source']['userId']);
+
+                    } elseif (strtolower($event['message']['text']) == 'flex message') {
+
+                        $flexTemplate = file_get_contents("../flex_message.json"); // template flex message
+                        $result = $httpClient->post(LINEBot::DEFAULT_ENDPOINT_BASE . '/v2/bot/message/reply', [
+                            'replyToken' => $event['replyToken'],
+                            'messages'   => [
+                                [
+                                    'type'     => 'flex',
+                                    'altText'  => 'Test Flex Message',
+                                    'contents' => json_decode($flexTemplate)
+                                ]
+                            ],
+                        ]);
+
+                    } else {
+                        // send same message as reply to user
+                        $result = $bot->replyText($event['replyToken'], $event['message']['text']);
+                    }
     
     
                     // or we can use replyMessage() instead to send reply message
@@ -149,7 +170,7 @@ $app->get('/pushmessage', function ($req, $response) use ($bot) {
     $userId = 'U102b977f023ad41432ca44954cb76f6c';
     $textMessageBuilder = new TextMessageBuilder('Halo, ini pesan push');
     $result = $bot->pushMessage($userId, $textMessageBuilder);
- 
+
     $response->getBody()->write("Pesan push berhasil dikirim!");
     return $response
         ->withHeader('Content-Type', 'application/json')

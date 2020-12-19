@@ -1,0 +1,74 @@
+{
+  "type": "bubble",
+  "header": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "Dicoding Academy",
+        "weight": "bold"
+      }
+    ]
+  },
+  "hero": {
+    "type": "image",
+    "url": "https://image.slidesharecdn.com/introductiontoliff-techsauce-180627063557/95/introduction-to-liff-line-frontend-framework-10-638.jpg?cb=1530081452",
+    "size": "full",
+    "aspectRatio": "4:3",
+    "aspectMode": "cover"
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "Belajar Membangun LINE Chatbot",
+        "size": "sm",
+        "color": "#c9302c",
+        "weight": "bold"
+      },
+      {
+        "type": "text",
+        "text": "oleh: Panji Ramadhan Hadjarati",
+        "size": "sm",
+        "color": "#c9302c"
+      },
+      {
+        "type": "text",
+        "text": "Materi di kelas ini disusun oleh Dicoding dan LINE API Expert dengan kurikulum yang didesain untuk Anda yang ingin belajar tentang LINE Messaging API, seperti Reply Message, Push Message, Group/Room Chat, dan masih banyak lagi.",
+        "size": "sm",
+        "wrap": true,
+        "margin": "lg"
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "horizontal",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "button",
+        "style": "secondary",
+        "action": {
+          "type": "postback",
+          "label": "Trial",
+          "displayText": "Trial",
+          "data": "Trial"
+        }
+      },
+      {
+        "type": "button",
+        "style": "primary",
+        "action": {
+          "type": "postback",
+          "label": "Daftar",
+          "displayText": "Daftar",
+          "data": "Daftar"
+        }
+      }
+    ]
+  }
+}
